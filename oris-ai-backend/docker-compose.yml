@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  oris-ai-backend:
+    build: .
+    container_name: oris-ai-backend
+    environment:
+      - PYTHONUNBUFFERED=1
+    env_file:
+      - .env.local
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./logs:/app/logs
+    restart: unless-stopped
+    networks:
+      - oris-ai-network
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+networks:
+  oris-ai-network:
+    driver: bridge
+
+volumes:
+  logs:
