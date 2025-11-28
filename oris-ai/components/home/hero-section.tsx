@@ -1,12 +1,12 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { motion } from "framer-motion"
-import { ArrowRight } from "lucide-react"
-import { useRouter } from "next/navigation"
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export function HeroSection() {
-  const router = useRouter()
+  const router = useRouter();
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -17,7 +17,7 @@ export function HeroSection() {
         delayChildren: 0.3,
       },
     },
-  }
+  };
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -29,7 +29,7 @@ export function HeroSection() {
         ease: "easeOut",
       },
     },
-  }
+  };
 
   const wordVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -42,9 +42,9 @@ export function HeroSection() {
         delay: i * 0.1,
       },
     }),
-  }
+  };
 
-  const words = ["Smile", "Brighter,", "Live", "Better."]
+  const words = ["Smile", "Brighter,", "Live", "Better."];
 
   return (
     <>
@@ -67,11 +67,21 @@ export function HeroSection() {
 
         {/* Content */}
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-screen flex flex-col items-center justify-center">
-          <motion.div className="text-center space-y-8" variants={containerVariants} initial="hidden" animate="visible">
+          <motion.div
+            className="text-center space-y-8"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+          >
             {/* Main Heading with Word Animation */}
             <motion.h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-foreground leading-tight">
               {words.map((word, i) => (
-                <motion.span key={i} custom={i} variants={wordVariants} className="inline-block mr-3">
+                <motion.span
+                  key={i}
+                  custom={i}
+                  variants={wordVariants}
+                  className="inline-block mr-3"
+                >
                   {word}
                 </motion.span>
               ))}
@@ -82,16 +92,20 @@ export function HeroSection() {
               variants={itemVariants}
               className="text-lg sm:text-xl text-foreground/70 max-w-2xl mx-auto leading-relaxed"
             >
-              Experience the future of dental care with Oris AI, your AI dental assistant. Get expert guidance,
-              personalized treatment plans, and 24/7 support.
+              Experience the future of dental care with Oris AI, your AI dental
+              assistant. Get expert guidance, personalized treatment plans, and
+              24/7 support.
             </motion.p>
 
             {/* CTA Buttons */}
-            <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+            <motion.div
+              variants={itemVariants}
+              className="flex flex-col sm:flex-row gap-4 justify-center pt-4"
+            >
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => router.push('/consultation')}
+                onClick={() => router.push("/consultation")}
                 className="aurora-pulse px-8 py-4 rounded-full bg-primary text-primary-foreground font-semibold text-base flex items-center justify-center gap-2 hover:shadow-2xl transition-shadow"
               >
                 Book AI Consultation
@@ -171,5 +185,5 @@ export function HeroSection() {
         </motion.div>
       </section>
     </>
-  )
+  );
 }

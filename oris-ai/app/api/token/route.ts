@@ -6,8 +6,9 @@ const apiKey = process.env.LIVEKIT_API_KEY;
 const apiSecret = process.env.LIVEKIT_API_SECRET;
 
 function generateRandomAlphanumeric(length: number): string {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let result = '';
+  const chars =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let result = "";
   for (let i = 0; i < length; i++) {
     result += chars.charAt(Math.floor(Math.random() * chars.length));
   }
@@ -29,7 +30,9 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const roomName = `oris-ai-${generateRandomAlphanumeric(4)}-${generateRandomAlphanumeric(4)}`;
+    const roomName = `oris-ai-${generateRandomAlphanumeric(
+      4
+    )}-${generateRandomAlphanumeric(4)}`;
     const identity = `patient-${generateRandomAlphanumeric(6)}`;
 
     const grant: VideoGrant = {
@@ -41,16 +44,13 @@ export async function POST(req: NextRequest) {
     };
 
     const token = await createToken({ identity }, grant);
-    
+
     return NextResponse.json({
       identity,
       accessToken: token,
       roomName,
     });
   } catch (e) {
-    return NextResponse.json(
-      { error: (e as Error).message },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: (e as Error).message }, { status: 500 });
   }
 }

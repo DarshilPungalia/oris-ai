@@ -4,15 +4,18 @@
 
 Oris AI is an advanced AI-powered dental consultation platform featuring **Retrieval Augmented Generation (RAG)** capabilities. It combines a modern Next.js frontend with a sophisticated Python backend powered by LiveKit and LlamaIndex. The platform enables real-time video consultations with an AI dental assistant named "Aria" who has access to a comprehensive dental knowledge base.
 
-## 🧠 RAG-Enhanced Features
+> For a detailed backend architecture overview, see: [ARCHITECTURE.md](./ARCHITECTURE.md)
+
 
 ### **Intelligent Knowledge Base**
+
 - **Comprehensive Dental Procedures Guide**: Detailed information about all dental treatments
-- **Emergency Dental Care Manual**: Urgent care protocols and immediate action steps  
+- **Emergency Dental Care Manual**: Urgent care protocols and immediate action steps
 - **Pricing and Services Database**: Complete service offerings and pricing structure
 - **Evidence-Based Responses**: All answers backed by professional dental knowledge
 
 ### **Enhanced AI Capabilities**
+
 - `search_dental_knowledge()` - Query the comprehensive dental database
 - `analyze_dental_image_with_knowledge()` - Vision analysis with knowledge base cross-reference
 - `book_appointment_with_context()` - Smart booking with procedure information
@@ -22,13 +25,15 @@ Oris AI is an advanced AI-powered dental consultation platform featuring **Retri
 ## 🏗️ Architecture
 
 ### Frontend (Next.js)
+
 - **Location**: `oris-ai/` folder
 - **Technology**: Next.js 14, TypeScript, Tailwind CSS, Framer Motion
 - **Components**: Modern consultation modal, video room, chat interface
 - **Features**: Real-time video/audio, chat transcription, appointment booking
 
 ### Backend (Python + LiveKit)
-- **Location**: `oris-ai-backend/` folder  
+
+- **Location**: `oris-ai-backend/` folder
 - **Technology**: LiveKit Agents, OpenAI GPT-4, Deepgram STT, OpenAI TTS
 - **AI Assistant**: "Aria" - Enhanced dental consultant with vision capabilities
 - **Features**: Image analysis, appointment booking, urgency assessment, dental tips
@@ -38,21 +43,24 @@ Oris AI is an advanced AI-powered dental consultation platform featuring **Retri
 ### Backend Setup
 
 1. **Navigate to backend directory:**
+
    ```bash
    cd oris-ai-backend
    ```
 
 2. **Run RAG setup script:**
+
    ```bash
    # On Windows
    start_rag_agent.bat
-   
+
    # On macOS/Linux
    chmod +x start.sh
    ./start.sh
    ```
 
 3. **Configure environment:**
+
    - Copy `.env.example` to `.env.local`
    - Fill in your API keys:
      - `LIVEKIT_URL`, `LIVEKIT_API_KEY`, `LIVEKIT_API_SECRET`
@@ -68,11 +76,13 @@ Oris AI is an advanced AI-powered dental consultation platform featuring **Retri
 ### Frontend Setup
 
 1. **Navigate to frontend directory:**
+
    ```bash
    cd oris-ai
    ```
 
 2. **Install dependencies:**
+
    ```bash
    npm install --legacy-peer-deps
    # or
@@ -80,6 +90,7 @@ Oris AI is an advanced AI-powered dental consultation platform featuring **Retri
    ```
 
 3. **Configure environment:**
+
    - Copy `.env.example` to `.env.local`
    - Set `NEXT_PUBLIC_LIVEKIT_URL` to your LiveKit server
    - Set `ORIS_BACKEND_URL` to your backend URL
@@ -94,6 +105,7 @@ Oris AI is an advanced AI-powered dental consultation platform featuring **Retri
 ## 🎯 Key Features
 
 ### AI Assistant "Aria"
+
 - **Personality**: Warm, professional, highly knowledgeable
 - **Capabilities**:
   - Real-time video consultation
@@ -104,6 +116,7 @@ Oris AI is an advanced AI-powered dental consultation platform featuring **Retri
   - Integration with CRM systems
 
 ### Frontend Features
+
 - **Modern UI**: Glassmorphism design with smooth animations
 - **Video Room**: LiveKit-powered real-time communication
 - **Chat Interface**: Real-time transcription and messaging
@@ -111,6 +124,7 @@ Oris AI is an advanced AI-powered dental consultation platform featuring **Retri
 - **Accessibility**: Keyboard navigation and ARIA compliance
 
 ### Backend Features
+
 - **Enhanced Functions**: 6 specialized AI functions for dental care
 - **Image Processing**: Real-time video frame analysis
 - **Appointment System**: Webhook integration for booking
@@ -120,16 +134,19 @@ Oris AI is an advanced AI-powered dental consultation platform featuring **Retri
 ## 🔧 Integration Points
 
 ### LiveKit Room Flow
+
 ```
 Patient → Frontend → LiveKit Room → Python Agent (Aria) → AI Processing → Response
 ```
 
 ### API Endpoints
+
 - `POST /api/livekit-token` - Generate room access tokens
-- `POST /api/appointments` - Book dental appointments  
+- `POST /api/appointments` - Book dental appointments
 - `GET /api/appointments?email=` - Check appointment status
 
 ### Webhook Integration
+
 - Appointment booking confirmation
 - CRM system integration
 - Email notifications
@@ -137,6 +154,7 @@ Patient → Frontend → LiveKit Room → Python Agent (Aria) → AI Processing 
 ## 📋 Required Environment Variables
 
 ### Backend (`.env.local`)
+
 ```env
 # LiveKit
 LIVEKIT_URL=wss://your-livekit-server.com
@@ -154,6 +172,7 @@ CRM_CONTACT_LOOKUP_ENDPOINT=your_crm_api
 ```
 
 ### Frontend (`.env.local`)
+
 ```env
 # Public (exposed to client)
 NEXT_PUBLIC_LIVEKIT_URL=wss://your-livekit-server.com
@@ -166,12 +185,14 @@ ORIS_API_SECRET=your_secure_secret
 ## 🐳 Docker Deployment
 
 ### Backend
+
 ```bash
 cd oris-ai-backend
 docker-compose up -d
 ```
 
 ### Frontend
+
 ```bash
 cd oris-ai
 docker build -t oris-ai-frontend .
@@ -208,6 +229,7 @@ docker run -p 3000:3000 oris-ai-frontend
 ## 📞 AI Assistant Capabilities
 
 ### Conversation Flow
+
 1. **Greeting**: Aria introduces herself and asks for patient name
 2. **Assessment**: Gathers information about dental concerns
 3. **Analysis**: Uses vision capabilities if needed
@@ -216,6 +238,7 @@ docker run -p 3000:3000 oris-ai-frontend
 6. **Follow-up**: Checks appointment status after booking
 
 ### Function Calls
+
 - `analyze_dental_image()` - Vision-based dental assessment
 - `book_dental_appointment()` - Appointment booking with webhooks
 - `check_appointment_status()` - CRM integration for status checks
@@ -225,11 +248,13 @@ docker run -p 3000:3000 oris-ai-frontend
 ## 🎨 Customization
 
 ### Frontend Theming
+
 - Modify `app/globals.css` for color schemes
 - Update `components/ui/` for component styling
 - Customize animations in Framer Motion components
 
 ### Backend Personality
+
 - Edit system prompt in `oris_ai_agent.py`
 - Modify function descriptions for different behaviors
 - Adjust response patterns and conversation flow
@@ -256,6 +281,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ## 🆘 Support
 
 For technical support or questions:
+
 - Create an issue in the repository
 - Contact the development team
 - Check the documentation and examples

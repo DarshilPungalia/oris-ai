@@ -29,4 +29,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
     CMD python -c "import requests; requests.get('http://localhost:8000/health')" || exit 1
 
 # Run the application
-CMD ["python", "oris_ai_agent.py", "start"]
+CMD ["python", "RetrievalEngineRAGAgent.py", "dev"]

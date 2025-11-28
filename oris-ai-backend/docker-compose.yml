@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   oris-ai-backend:
@@ -16,7 +16,13 @@ services:
     networks:
       - oris-ai-network
     healthcheck:
-      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8000/health')"]
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import requests; requests.get('http://localhost:8000/health')",
+        ]
       interval: 30s
       timeout: 10s
       retries: 3

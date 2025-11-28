@@ -1,0 +1,29 @@
+version: 2
+services:
+  - type: web
+    name: oris-ai-backend
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: python RetrievalEngineRAGAgent.py dev
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: GOOGLE_API_KEY
+        sync: false
+      - key: ELEVENLABS_API_KEY
+        sync: false
+      - key: ELEVENLABS_VOICE_ID
+        sync: false
+      - key: LIVEKIT_URL
+        sync: false
+      - key: LIVEKIT_API_KEY
+        sync: false
+      - key: LIVEKIT_API_SECRET
+        sync: false
+      - key: WEBHOOK_URL
+        sync: false
+      - key: HUMAN_AGENT_PHONE
+        sync: false
+      - key: SIP_TRUNK_ID
+        sync: false

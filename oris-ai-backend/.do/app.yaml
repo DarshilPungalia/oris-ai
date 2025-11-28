@@ -1,0 +1,44 @@
+version: 2
+name: oris-ai-backend
+services:
+- name: oris-ai-backend
+  source_dir: /
+  github:
+    repo: your-username/your-repo-name
+    branch: main
+    deploy_on_push: true
+  run_command: python RetrievalEngineRAGAgent.py dev
+  environment_slug: python
+  instance_count: 1
+  instance_size_slug: basic-xxs
+  http_port: 8000
+  health_check:
+    http_path: /health
+  envs:
+  - key: GOOGLE_API_KEY
+    scope: RUN_TIME
+    type: SECRET
+  - key: ELEVENLABS_API_KEY
+    scope: RUN_TIME
+    type: SECRET
+  - key: ELEVENLABS_VOICE_ID
+    scope: RUN_TIME
+    type: SECRET
+  - key: LIVEKIT_URL
+    scope: RUN_TIME
+    type: SECRET
+  - key: LIVEKIT_API_KEY
+    scope: RUN_TIME
+    type: SECRET
+  - key: LIVEKIT_API_SECRET
+    scope: RUN_TIME
+    type: SECRET
+  - key: WEBHOOK_URL
+    scope: RUN_TIME
+    type: SECRET
+  - key: HUMAN_AGENT_PHONE
+    scope: RUN_TIME
+    type: SECRET
+  - key: SIP_TRUNK_ID
+    scope: RUN_TIME
+    type: SECRET

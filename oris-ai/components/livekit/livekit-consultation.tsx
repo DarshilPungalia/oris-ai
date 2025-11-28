@@ -1,13 +1,13 @@
-"use client"
+"use client";
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { 
-  LiveKitRoom, 
-  RoomAudioRenderer, 
+import {
+  LiveKitRoom,
+  RoomAudioRenderer,
   StartAudio,
   useVoiceAssistant,
-  BarVisualizer 
+  BarVisualizer,
 } from "@livekit/components-react";
 import { Mic, MicOff, Volume2, X } from "lucide-react";
 import { Track } from "livekit-client";
@@ -49,12 +49,15 @@ function ConsultationRoom({ onClose }: { onClose: () => void }) {
         <div className="text-center space-y-4">
           <motion.div
             animate={{ scale: state === "speaking" ? [1, 1.1, 1] : 1 }}
-            transition={{ repeat: state === "speaking" ? Infinity : 0, duration: 1 }}
+            transition={{
+              repeat: state === "speaking" ? Infinity : 0,
+              duration: 1,
+            }}
             className="w-32 h-32 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center mx-auto"
           >
             <div className="text-white text-4xl font-bold">D</div>
           </motion.div>
-          
+
           <div>
             <p className="text-xl font-semibold">Daela AI Assistant</p>
             <p className="text-muted-foreground">
@@ -98,14 +101,18 @@ function ConsultationRoom({ onClose }: { onClose: () => void }) {
           <button
             onClick={() => setIsAudioEnabled(!isAudioEnabled)}
             className={`p-4 rounded-full transition-all ${
-              isAudioEnabled 
-                ? "bg-blue-500 hover:bg-blue-600 text-white" 
+              isAudioEnabled
+                ? "bg-blue-500 hover:bg-blue-600 text-white"
                 : "bg-red-500 hover:bg-red-600 text-white"
             }`}
           >
-            {isAudioEnabled ? <Mic className="w-6 h-6" /> : <MicOff className="w-6 h-6" />}
+            {isAudioEnabled ? (
+              <Mic className="w-6 h-6" />
+            ) : (
+              <MicOff className="w-6 h-6" />
+            )}
           </button>
-          
+
           <div className="flex items-center gap-2 px-4 py-2 bg-background/20 rounded-full">
             <Volume2 className="w-4 h-4 text-muted-foreground" />
             <span className="text-sm text-muted-foreground">Audio ON</span>
@@ -119,7 +126,11 @@ function ConsultationRoom({ onClose }: { onClose: () => void }) {
   );
 }
 
-export function LiveKitConsultation({ wsUrl, token, onClose }: LiveKitConsultationProps) {
+export function LiveKitConsultation({
+  wsUrl,
+  token,
+  onClose,
+}: LiveKitConsultationProps) {
   const [isConnecting, setIsConnecting] = useState(true);
 
   useEffect(() => {
@@ -138,7 +149,9 @@ export function LiveKitConsultation({ wsUrl, token, onClose }: LiveKitConsultati
           />
           <div>
             <p className="text-xl font-semibold">Connecting to Daela...</p>
-            <p className="text-muted-foreground">Setting up your AI dental consultation</p>
+            <p className="text-muted-foreground">
+              Setting up your AI dental consultation
+            </p>
           </div>
         </div>
       </div>

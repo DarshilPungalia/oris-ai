@@ -1,20 +1,20 @@
-"use client"
-import { useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import { X, Loader } from "lucide-react"
-import { FullConsultationRoom } from "@/components/livekit/full-consultation-room"
-import { useConsultation } from "@/hooks/use-consultation"
+"use client";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { X, Loader } from "lucide-react";
+import { FullConsultationRoom } from "@/components/livekit/full-consultation-room";
+import { useConsultation } from "@/hooks/use-consultation";
 
 interface ConsultationModalProps {
-  isOpen: boolean
-  onClose: () => void
+  isOpen: boolean;
+  onClose: () => void;
 }
 
 export function ConsultationModal({ isOpen, onClose }: ConsultationModalProps) {
-  const [patientName, setPatientName] = useState("")
-  const [showNameInput, setShowNameInput] = useState(true)
-  const [isInitializing, setIsInitializing] = useState(false)
-  
+  const [patientName, setPatientName] = useState("");
+  const [showNameInput, setShowNameInput] = useState(true);
+  const [isInitializing, setIsInitializing] = useState(false);
+
   const {
     isConnecting,
     isConnected,
@@ -22,42 +22,42 @@ export function ConsultationModal({ isOpen, onClose }: ConsultationModalProps) {
     connect,
     disconnect,
     wsUrl,
-    token
+    token,
   } = useConsultation({
     onConnected: () => {
-      console.log("Connected to Oris AI consultation")
-      setIsInitializing(false)
+      console.log("Connected to Oris AI consultation");
+      setIsInitializing(false);
     },
     onError: (error) => {
-      console.error("Consultation connection error:", error)
-      setIsInitializing(false)
-    }
-  })
+      console.error("Consultation connection error:", error);
+      setIsInitializing(false);
+    },
+  });
 
   const handleStartConsultation = async () => {
-    if (!patientName.trim()) return
-    
-    setIsInitializing(true)
-    setShowNameInput(false)
-    
+    if (!patientName.trim()) return;
+
+    setIsInitializing(true);
+    setShowNameInput(false);
+
     try {
-      await connect(patientName)
+      await connect(patientName);
     } catch (error) {
-      console.error("Failed to start consultation:", error)
-      setShowNameInput(true)
-      setIsInitializing(false)
+      console.error("Failed to start consultation:", error);
+      setShowNameInput(true);
+      setIsInitializing(false);
     }
-  }
+  };
 
   const handleClose = () => {
-    disconnect()
-    setShowNameInput(true)
-    setPatientName("")
-    setIsInitializing(false)
-    onClose()
-  }
+    disconnect();
+    setShowNameInput(true);
+    setPatientName("");
+    setIsInitializing(false);
+    onClose();
+  };
 
-  if (!isOpen) return null
+  if (!isOpen) return null;
 
   return (
     <AnimatePresence>
@@ -67,7 +67,7 @@ export function ConsultationModal({ isOpen, onClose }: ConsultationModalProps) {
         exit={{ opacity: 0 }}
         className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
         onClick={(e) => {
-          if (e.target === e.currentTarget) handleClose()
+          if (e.target === e.currentTarget) handleClose();
         }}
       >
         <motion.div
@@ -112,9 +112,11 @@ export function ConsultationModal({ isOpen, onClose }: ConsultationModalProps) {
                     className="w-28 h-28 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center mx-auto shadow-2xl relative overflow-hidden"
                   >
                     <div className="absolute inset-2 rounded-full bg-gradient-to-br from-blue-300/20 to-purple-300/20 backdrop-blur-sm"></div>
-                    <span className="relative text-white text-4xl font-bold tracking-wider">D</span>
+                    <span className="relative text-white text-4xl font-bold tracking-wider">
+                      D
+                    </span>
                   </motion.div>
-                  
+
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -124,10 +126,11 @@ export function ConsultationModal({ isOpen, onClose }: ConsultationModalProps) {
                       Welcome to Oris AI
                     </h3>
                     <p className="text-slate-600 dark:text-slate-400 text-lg leading-relaxed">
-                      Please enter your name to start your personalized dental consultation with our advanced AI assistant.
+                      Please enter your name to start your personalized dental
+                      consultation with our advanced AI assistant.
                     </p>
                   </motion.div>
-                  
+
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -141,16 +144,19 @@ export function ConsultationModal({ isOpen, onClose }: ConsultationModalProps) {
                         value={patientName}
                         onChange={(e) => setPatientName(e.target.value)}
                         onKeyDown={(e) => {
-                          if (e.key === 'Enter') handleStartConsultation()
+                          if (e.key === "Enter") handleStartConsultation();
                         }}
                         className="w-full px-6 py-4 rounded-2xl border-2 border-slate-200 dark:border-slate-700 bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm focus:border-blue-500 focus:outline-none transition-all duration-200 text-lg font-medium placeholder:text-slate-400"
                         disabled={isInitializing}
                         autoFocus
                       />
                     </div>
-                    
+
                     <motion.button
-                      whileHover={{ scale: 1.02, boxShadow: "0 20px 40px rgba(59, 130, 246, 0.3)" }}
+                      whileHover={{
+                        scale: 1.02,
+                        boxShadow: "0 20px 40px rgba(59, 130, 246, 0.3)",
+                      }}
                       whileTap={{ scale: 0.98 }}
                       onClick={handleStartConsultation}
                       disabled={!patientName.trim() || isInitializing}
@@ -169,7 +175,7 @@ export function ConsultationModal({ isOpen, onClose }: ConsultationModalProps) {
                       </div>
                     </motion.button>
                   </motion.div>
-                  
+
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -194,7 +200,7 @@ export function ConsultationModal({ isOpen, onClose }: ConsultationModalProps) {
                       Your consultation is encrypted and confidential
                     </p>
                   </motion.div>
-                  
+
                   {error && (
                     <motion.div
                       initial={{ opacity: 0, scale: 0.95 }}
@@ -217,7 +223,11 @@ export function ConsultationModal({ isOpen, onClose }: ConsultationModalProps) {
                 <div className="text-center space-y-6">
                   <motion.div
                     animate={{ rotate: 360 }}
-                    transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "linear",
+                    }}
                     className="w-24 h-24 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center mx-auto shadow-2xl"
                   >
                     <Loader className="w-8 h-8 text-white" />
@@ -245,5 +255,5 @@ export function ConsultationModal({ isOpen, onClose }: ConsultationModalProps) {
         </motion.div>
       </motion.div>
     </AnimatePresence>
-  )
+  );
 }
