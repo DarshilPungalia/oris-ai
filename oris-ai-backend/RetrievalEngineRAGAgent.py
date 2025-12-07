@@ -1,15 +1,10 @@
 import asyncio
-from typing import Annotated
 import re
 import os
+from typing import Literal
 from dotenv import load_dotenv
-from livekit import agents, rtc, api
-from livekit.agents import AutoSubscribe, JobContext, WorkerOptions, cli, tokenize, llm, function_tool, RunContext, Agent, AgentSession
-from livekit.agents.llm import (
-    ChatContext,
-    ChatMessage,
-    ChatContent,
-)
+from livekit import rtc, api
+from livekit.agents import AutoSubscribe, JobContext, WorkerOptions, cli, llm, function_tool, RunContext, Agent, AgentSession
 from livekit.plugins import deepgram, openai, silero, google, elevenlabs
 from llama_index.core import (
     SimpleDirectoryReader,
@@ -21,6 +16,7 @@ from llama_index.core import (
 from llama_index.embeddings.google_genai import GoogleGenAIEmbedding
 from llama_index.core.schema import MetadataMode
 import requests
+import json
 
 load_dotenv()
 
@@ -31,17 +27,42 @@ Settings.embed_model = GoogleGenAIEmbedding(
     api_key=os.getenv("GOOGLE_API_KEY")
 )
 
+knowledge = {
+    "Dental": {
+        "Persist_Dir" : "./dental-knowledge-storage",
+        "knowlegde_base": "knowlegde_base/dental_data",
+        "greeting": "Hello! I'm Daela, your dental assistant at Knolabs Dental Agency. Can I know if you are the patient or you're representing the patient?"
+    },
+
+    "Uni": {
+        "Persist_Dir" : "./university-knowledge-storage",
+        "knowlegde_base": "knowlegde_base/uni_data",
+        "greeting": "Hi there! I'm Alex from MBM University Help Desk. Are you a student here, or are you assisting someone with their inquiry?"
+    },
+}
+
+rag_type = "Uni"
+
 # Initialize RAG components
-PERSIST_DIR = "./dental-knowledge-storage"
+PERSIST_DIR = knowledge.get(rag_type).get("Persist_Dir")
 if not os.path.exists(PERSIST_DIR):
     # Load dental knowledge documents and create index
-    documents = SimpleDirectoryReader("dental_data").load_data()
+    documents = SimpleDirectoryReader(knowledge.get(rag_type).get("knowlegde_base")).load_data()
     index = VectorStoreIndex.from_documents(documents)
     index.storage_context.persist(persist_dir=PERSIST_DIR)
 else:
     # Load existing dental knowledge index
     storage_context = StorageContext.from_defaults(persist_dir=PERSIST_DIR)
     index = load_index_from_storage(storage_context)
+
+def load_prompt(type:Literal["Dental", "University"] = "Dental"):
+    sys_prompt = ""
+    with open("prompt.json") as file:
+        prompts = json.load(file)
+        for prompt in prompts[type]:
+            sys_prompt += prompt
+    
+    return sys_prompt
 
 # Define function tools for dental assistant
 @function_tool()
@@ -71,7 +92,7 @@ async def assess_dental_urgency(context: RunContext, symptoms: str) -> dict:
         return {"result": "Your dental issue doesn't appear to be immediately urgent, but it's still important to schedule an appointment soon for a proper evaluation."}
 
 @function_tool()
-async def retrieval_dental_info(context: RunContext, query: str) -> dict:
+async def retrieval_info(context: RunContext, query: str) -> dict:
     """Search the dental knowledge base for specific information about procedures, care, or treatments."""
     print(f"🔍 Searching dental knowledge base for: {query}")
     try:
@@ -121,25 +142,13 @@ async def entrypoint(ctx: JobContext):
         tts_provider = openai.TTS()
 
     # Create system message using correct list format from help-ref.md
-    system_text = ("Your name is Daela, a dental assistant for Knolabs Dental Agency. You are soft, caring with a bit of humour in you when responding. "
-                   "You offer appointment booking for dental care services, including urgent attention, routine check-ups, and long-term treatments available at various prices. "
-                   "CRITICAL INSTRUCTION: WHENEVER a user asks about prices, costs, fees, charges, procedures, treatments, or any dental services, you MUST FIRST call the retrieval_dental_info function with their query before providing any answer. "
-                   "You have access to comprehensive dental pricing and service information through the retrieval_dental_info function - USE IT EVERY TIME for pricing or service questions! "
-                   "Never guess or make up prices - always use the retrieval function first. "
-                   "An onsite appointment is required for actual treatment. "
-                   "Provide friendly, professional assistance and emphasize the importance of regular dental care. "
-                   "The users asking you questions could be of different age. so ask questions one by one. "
-                   "Any query outside of the dental service, politely reject stating your purpose. "
-                   "Keep your focus on try and get the patient's name and email address in sequence if not already provided while you help user. Encourage user to type email address to avoid any mistakes and reconfirm it after user provides it. "
-                   "Remember every patient asking for information or help is a potential lead for the business so always try to get the patient info being polite and not pushing too much but using subtle discussion approach. "
-                   "If the care needed is not urgent, provide guidance based on the patient's verbal description and offer assistance. "
-                   "Always keep your conversation engaging, short and multiple interactions even when the information you are sharing is lengthy and try to offer the in-person appointment.")
+    system_text = load_prompt()
     
     # Create tools list using function_tool wrapper as per documentation
     tools = [
         function_tool(book_appointment),
         function_tool(assess_dental_urgency),
-        function_tool(retrieval_dental_info)
+        function_tool(retrieval_info)
     ]
     
     initial_ctx = llm.ChatContext()
@@ -200,11 +209,13 @@ async def entrypoint(ctx: JobContext):
             "Human Agent interaction completed. Politely ask if it was helpful and if user is happy to proceed with the in-person appointment.",
             allow_interruptions=True
         )
+    
+    greeting = knowledge.get(rag_type).get("greeting")
 
     # Start the session with the agent and room
     await session.start(agent, room=ctx.room)
     session.say(
-        "Hello! I'm Daela, your dental assistant at Knolabs Dental Agency. Can I know if you are the patient or you're representing the patient?",
+       greeting,
         allow_interruptions=True
     )
 
